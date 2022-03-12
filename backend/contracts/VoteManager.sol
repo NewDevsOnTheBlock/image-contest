@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 import "hardhat/console.sol";
 import "./candidate.sol";
@@ -13,6 +13,8 @@ contract VoteManager {
         Candidate _candidate;
         uint _totalVote;
         string _name;
+        bytes32 imageHash;
+        bool hasAlreadyVoted;
     }
 
     VoteManager.VoteStatus _status;
