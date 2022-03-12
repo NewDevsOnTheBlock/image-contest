@@ -1,9 +1,30 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import logo from './logo.svg'
+import { abi } from '../../backend/artifacts/contracts/VoteManager.sol/VoteManager.json'
+import { ethers } from "ethers";
 
 function App(): ReactElement {
-  const [count, setCount] = useState(0)
+  const [contract, setContract] = useState()
+  const [provider, setProvider] = useState()
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  useEffect(() => {
+    initSignerAndContract()
 
+  }, [])
+
+  async function initSignerAndContract() {
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    console.log('provider is ', provider)
+    if(provider) {
+      setContract( new ethers.Contract(contractAddress, abi, provider.getSigner()))
+    }
+  }
+
+  async function getWinner() {
+    const contracTName = await contract.getWinner();
+    console.log(contracTName)
+  }
+  
   return (
     <div className="border border-gray-50 rounded-xl p-20 shadow-xl">
       <header>
@@ -14,9 +35,9 @@ function App(): ReactElement {
         <p>
           <button
             className="bg-purple-400 pl-2 pr-2 pt-1 pb-1 rounded text-sm text-purple-100"
-            onClick={() => setCount((count) => count + 1)}
+            onClick={() => getWinner()}
           >
-            count is: {count}
+            Get Winner
           </button>
         </p>
         <p className="pb-3 pt-3">
@@ -60,3 +81,6 @@ function App(): ReactElement {
 }
 
 export default App
+
+
+
