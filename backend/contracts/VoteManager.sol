@@ -14,6 +14,7 @@ contract VoteManager {
         uint totalVote;
         string name;
         string imageHash;
+        address candidateAddress;
     }
     using Counters for Counters.Counter;
     Counters.Counter private candidatesIds;
@@ -21,43 +22,45 @@ contract VoteManager {
     VoteManager.VoteStatus _status;
     address internal winner;
 
-    mapping(address => Candidate) public candidates;
-    mapping (uint=> address ) private accounts;
+    mapping(address => Candidate) private candidates;
+    mapping(uint=> address ) private accounts;
     mapping(address => bool) public hasAddressVoted;
 
     event VoteStatusEvent(address _candidateAddress, uint _status);
     event Voted(address indexed _candidateAddress, address indexed _voterAddress, uint _totalVote);
     event candidateCreated(address indexed canditateAddress, string name);
 
-    function registerCanditate(string memory _name, string memory _imageHash) public {
+    function registerCandidate(string calldata _name, string calldata _imageHash) external {
         //check if candidate already registered
+        require(msg.sender != address(0));
         require(candidates[msg.sender].id == 0 || candidates[msg.sender].id > 0, "Candidate already registered");
+        
         candidatesIds.increment();
         uint candidateId = candidatesIds.current();
-        Candidate memory newCandidate = Candidate(candidateId, 0, _name, _imageHash);
         address _address = address(msg.sender);
+        Candidate memory newCandidate = Candidate(candidateId, 0, _name, _imageHash, _address);
         candidates[_address] = newCandidate;
         accounts[candidateId] = msg.sender;
         emit candidateCreated(_address, _name);
     }
 
       /* fetches all candidates */
-    function fetchCandidates() public view returns ( Candidate[] memory) {
+    function fetchCandidates() external view returns ( Candidate[] memory) {
         uint itemCount = candidatesIds.current();
 
         Candidate[] memory candidatesArray = new Candidate[](itemCount);
         for (uint i = 0; i < itemCount; i++) {
             uint currentId = i + 1;
-            Candidate storage currentItem = candidates[accounts[currentId]];
-            candidatesArray[i] = currentItem;
+            Candidate memory currentCandidate = candidates[accounts[currentId]];
+            candidatesArray[i] = currentCandidate;
         }
         return candidatesArray;
     }
 
 
     function vote(address _forCandidate) public {
-        require(hasAddressVoted[msg.sender], "Candidate has already voted");
-
+        // require(hasAddressVoted[msg.sender], "Candidate has already voted");
+        console.log('dieser account voted jetzt', msg.sender);
         hasAddressVoted[msg.sender] = true;
         candidates[_forCandidate].totalVote += 1;
 
