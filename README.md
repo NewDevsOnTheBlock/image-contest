@@ -6,10 +6,11 @@ upload and image and vote for the best one
 
 #Backend
 pre: cd into /backend
-0) start local testnet ---> npm run testnet
-1) Compile contracts ---> npm run build
-2) Test contracts -->     npm run test
-3) Deploy contracts -->   npm run deploy
+0) Install dependencies --> npm install
+1) start local testnet ---> npm run testnet
+2) Compile contracts ---> npm run build
+3) Test contracts -->     npm run test
+4) Deploy contracts -->   npm run deploy
 
 ##Frontend
 pre: cd into /frontend
