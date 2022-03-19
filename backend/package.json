@@ -1,9 +1,17 @@
 {
   
   "scripts": {
-  "testnet": "npx hardhat node", 
-  "deploy": "npx hardhat run --network localhost scripts/deploy.ts",  
+  
+    
+  "testnet": "npx hardhat node",
+  
+    
+  "deploy": "npx hardhat run --network localhost scripts/deploy.ts",
+  
+    
   "compile": "npx hardhat compile",
+  
+    
   "test": "npx hardhat test"
   
   },

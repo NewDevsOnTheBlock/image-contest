@@ -3,26 +3,25 @@ import React from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {Card, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
 
-export const CandidateCard = (props: {candidate: Candidate; vote: any}) => {
+export const CandidateCard = (props: { candidate: Candidate; vote: any }) => {
     const {candidate, vote} = props;
 
     const getFormattedAddress = () => {
-        const firstPart = candidate.candidateAddress?.slice(0,6)
+        const firstPart = candidate.candidateAddress?.slice(0, 6)
         const lastPart = candidate.candidateAddress?.slice(-6)
         return `${firstPart}...${lastPart}`
     }
 
-    return(
+    return (
         <div>
-            <Card >
+            <Card>
                 <CardMedia
                     component="img"
-                    height="140"
                     image={candidate.imageHash}
                     alt="candidate image"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom component="div">
                         Total votes: {candidate.totalVote.toNumber()}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -32,9 +31,10 @@ export const CandidateCard = (props: {candidate: Candidate; vote: any}) => {
                         {getFormattedAddress()}
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="like picture" sx={{ bgcolor: 'info.contrastText', color: 'info.main'}} onClick={() => vote(candidate.candidateAddress)}>
-                        <FavoriteIcon />
+                <CardActions disableSpacing sx={{paddingTop: "0"}}>
+                    <IconButton aria-label="like picture" sx={{bgcolor: 'info.contrastText', color: 'info.main'}}
+                                onClick={() => vote(candidate.candidateAddress)}>
+                        <FavoriteIcon/>
                     </IconButton>
                 </CardActions>
             </Card>
