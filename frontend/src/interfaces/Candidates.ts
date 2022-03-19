@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-export default interface Candidate {
+export interface Candidate {
     id: number;
     totalVote: number | BigNumber;
     name: string;
@@ -8,7 +8,7 @@ export default interface Candidate {
     candidateAddress?: string;
 }
 
-export default interface CandidateFormData {
+export interface CandidateFormData {
     name?: string;
     imageHash?: string;
 }
