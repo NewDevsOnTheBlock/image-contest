@@ -5,9 +5,8 @@ import getContract from './utils/hooks/useGetContract';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Input from '@mui/material/Input';
-
-
-
+import {CandidateCard} from "./components/CandidateCard";
+import {Box, Grid} from "@mui/material";
 
 function App(): ReactElement {
   const [contract, setContract] = useState()
@@ -52,7 +51,7 @@ function App(): ReactElement {
   }
 
   return (
-    <div className="border border-gray-50 rounded-xl w-full h-full p-20 shadow-xl">
+    <div className="container">
       <form className='mb-5 p-2'>
           <TextField label="Name" />
           <label htmlFor="contained-button-file">
@@ -62,30 +61,23 @@ function App(): ReactElement {
             </Button>
           </label>
           <Button
-            onClick={() => registerCandidate()} 
+            onClick={() => registerCandidate()}
             variant="contained"> Register as Candidate
           </Button>
       </form>
-   
 
-      <div className="flex flex-wrap ">
-        <p>Candidates Length {candidates.length}</p>
-        {/* {candidates.map(candidate => (
-        <li key={candidate.id}>{candidate.name}</li>
-      ))} */}
-        {candidates?.length > 0 && candidates.map((candidate, index) => (
-          <div key={index} className="bg-gray-100 p-6 rounded-lg">
-            <img className="h-40 rounded w-full object-cover object-center mb-6" src={candidate.imageHash} alt="content" />
-            <h3 className="tracking-widest text-indigo-500 text-xs font-medium title-font">{candidate.name}</h3>
-            <h2 className="text-lg text-gray-900 font-medium title-font mb-4">Votes: {candidate.totalVote.toNumber()}</h2>
-            <p>{candidate.candidateAddress}</p>
-            <Button onClick={() => vote(candidate.candidateAddress)} className="mr-2" variant="contained" component="span">
-              Vote
-            </Button>
-          </div>
-        ))}
+      <p>Total registered Candidate: {candidates.length}</p>
 
-      </div>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {
+            candidates.map((candidate, index) =>
+              <Grid item xs={2} sm={4} md={4} key={index}>
+                <CandidateCard candidate={candidate} vote={vote}/>
+              </Grid>)
+          }
+        </Grid>
+      </Box>
     </div>
   )
 }
