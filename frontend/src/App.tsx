@@ -11,8 +11,8 @@ import {Box, Container, Grid, Stack, styled, Typography} from "@mui/material";
 function App(): ReactElement {
     const [contract, setContract] = useState()
     const [candidates, setCandidates] = useState<Candidate[]>([])
-    const [candidateForm, setCandidateForm] = useState<CandidateFormData>({name: '', imageHash: ''})
-    const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    const [candidateFormData, setCandidateFormData] = useState<CandidateFormData>({name: '', imageHash: ''})
+    const contractAddress = "0xf5059a5D33d5853360D16C683c16e67980206f36"
 
     //TODO: SUBSCRIBE TO EVENT -->
     useEffect(() => {
@@ -21,22 +21,28 @@ function App(): ReactElement {
 
     useEffect(() => {
         if (contract) {
-            getAllCandidates()
+            getAllCandidates().then()
         }
     }, [contract])
 
     async function registerCandidate() {
-        const contracTName = await contract.registerCandidate("hannes", "https://gateway.pinata.cloud/ipfs/QmXMxbkj4Wbx8qn1PDZ4v91F9u6Y4YqHkieXmZDpPFKU4T");
-        console.log(contracTName)
+        const name = candidateFormData.name;
+        const contracTName = await contract.registerCandidate(name, "https://gateway.pinata.cloud/ipfs/QmXMxbkj4Wbx8qn1PDZ4v91F9u6Y4YqHkieXmZDpPFKU4T");
+        console.log('register', contracTName)
+        contract.on("candidateCreated", async function (evt) {
+            getAllCandidates().then()
+        })
     }
 
-    function vote(address: string) {
+    async function vote(address: string) {
         if (!address) {
             throw Error("no address defined")
         }
-        console.log('ADDRESSE ', address)
-        contract.vote(address);
-        getAllCandidates();
+
+        await contract.vote(address);
+        contract.on("Voted", async function (evt) {
+            getAllCandidates().then()
+        })
     }
 
     async function getAllCandidates() {
@@ -58,32 +64,43 @@ function App(): ReactElement {
         display: 'none',
     });
 
+    const handleChange = (event: any) => {
+        setCandidateFormData((prevState) => {
+            return {
+                ...prevState,
+                [event.target.name]: event.target.value
+            }
+        });
+    }
+
     return (
         <>
             <Container maxWidth="md" sx={{marginY: "2rem"}}>
-                <form>
+                <Box component="form">
                     <Stack direction="row" alignItems="center" spacing={2} mb={4}>
-                        <TextField id="filled-basic" label="Name" variant="filled"/>
+                        <TextField id="filled-basic"
+                                   label="Name" variant="filled"
+                                   name="name"
+                                   value={candidateFormData.name}
+                                   onChange={handleChange}/>
                         <label htmlFor="contained-button-file">
                             <Input accept="image/*" id="contained-button-file" multiple type="file"/>
                             <Button variant="outlined" component="span">
                                 Upload image
                             </Button>
                         </label>
-                        <label htmlFor="contained-button-file">
-                            <Button variant="contained" component="span" onClick={() => registerCandidate()}>
-                                Register as Candidate
-                            </Button>
-                        </label>
+                        <Button variant="contained" component="span" onClick={() => registerCandidate()}>
+                            Register as Candidate
+                        </Button>
                     </Stack>
-                </form>
+                </Box>
 
                 <Typography variant="h6" component="h2">
                     Total registered Candidate: {candidates.length}
                 </Typography>
             </Container>
 
-            <Container sx={{bgcolor: "#F0F3F7"}}>
+            {candidates.length > 0 && (<Container sx={{bgcolor: "#F0F3F7"}}>
                 <Box sx={{flexGrow: 1, paddingY: "3rem", paddingX: "2rem"}}>
                     <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}}>
                         {
@@ -94,7 +111,7 @@ function App(): ReactElement {
                         }
                     </Grid>
                 </Box>
-            </Container>
+            </Container>)}
 
         </>
     )
