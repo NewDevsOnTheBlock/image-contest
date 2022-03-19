@@ -2,6 +2,7 @@ import {Candidate} from "../interfaces/Candidates";
 import React from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {Card, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
+import {BigNumber} from "ethers";
 
 export const CandidateCard = (props: { candidate: Candidate; vote: any }) => {
     const {candidate, vote} = props;
@@ -22,7 +23,7 @@ export const CandidateCard = (props: { candidate: Candidate; vote: any }) => {
                 />
                 <CardContent>
                     <Typography gutterBottom component="div">
-                        Total votes: {candidate.totalVote.toNumber()}
+                        Total votes: {(candidate.totalVote as BigNumber).toNumber()}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         {candidate.name}
