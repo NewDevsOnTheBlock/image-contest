@@ -19,7 +19,7 @@ async function main() {
 
   await voteManagerContractDeployed.deployed();
 
-  console.log("Greeter deployed to:", voteManagerContractDeployed.address);
+  console.log("VoteManager deployed to:", voteManagerContractDeployed.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
